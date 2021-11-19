@@ -72,10 +72,13 @@ function updateCart(){
 
 function updateNumberOfUnits(id, action){
     const item = cart.find((product) => product.id === id)
-    if (action === 'add'){
-        item["numberOfUnits"] = (item["numberOfUnits"] ?? 0) + 1;
-    } else {
-        item["numberOfUnits"] = (item["numberOfUnits"] ?? 0) - 1;
+    if (action === 'add' && item.numberOfUnits < item.instock){
+        item.numberOfUnits = (item.numberOfUnits ?? 0) + 1;
+    } else if (action === 'minus' && item.numberOfUnits > 1){
+        item.numberOfUnits = (item.numberOfUnits ?? 0) - 1;
+        if (item.numberOfUnits === 1){
+            cart = cart.filter()
+        }
     }
     updateCart();
 }
