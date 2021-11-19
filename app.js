@@ -55,7 +55,7 @@ function renderCart(){
 
 function addToCart(id){
     if (cart.some((item) => item.id === id)) {
-        updateNumberOfUnits(item.id, 'add');
+        updateNumberOfUnits(id, 'add');
     }else {
         const item = products.find((product) => product.id === id)
         cart.push({
