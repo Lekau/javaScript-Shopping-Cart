@@ -44,9 +44,9 @@ function renderCart(){
                 <small>$</small>${item.price}
             </div>
             <div class="units">
-                <div class="btn minus">-</div>
+                <div class="btn minus" onClick="updateNumberOfUnits(${item.id}, 'minus')">-</div>
                 <div class="number">${item.numberOfUnits}</div>
-                <div class="btn plus">+</div>           
+                <div class="btn plus" onClick="updateNumberOfUnits(${item.id}, 'add')">+</div>           
             </div>
         </div>
         `
@@ -55,8 +55,7 @@ function renderCart(){
 
 function addToCart(id){
     if (cart.some((item) => item.id === id)) {
-        const itemU = cart.find((product) => product.id === id)
-        itemU["numberOfUnits"] = (itemU["numberOfUnits"] ?? 0) + 1;
+        updateNumberOfUnits(item.id, 'add');
     }else {
         const item = products.find((product) => product.id === id)
         cart.push({
@@ -69,6 +68,16 @@ function addToCart(id){
 
 function updateCart(){
     renderCart();
+}
+
+function updateNumberOfUnits(id, action){
+    const item = cart.find((product) => product.id === id)
+    if (action === 'add'){
+        item["numberOfUnits"] = (item["numberOfUnits"] ?? 0) + 1;
+    } else {
+        item["numberOfUnits"] = (item["numberOfUnits"] ?? 0) - 1;
+    }
+    updateCart();
 }
 
 renderProducts()
