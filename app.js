@@ -1,9 +1,8 @@
 /* app.js */
 const productsEl = document.querySelector(".products");
-
+const cartItemsEl = document.querySelector(".cart-items");
 
 let cart = [];
-
 
 function renderProducts(){
     products.forEach((product) => {
@@ -31,10 +30,33 @@ function renderProducts(){
         `
     });
 }
+
+function renderCart(){
+    cartItemsEl.innerHTML = "";
+    cart.forEach((item) => {
+        cartItemsEl.innerHTML += `
+        <div class="cart-item">
+            <div class="item-info">
+                <img src="${item.imgSrc}" alt="${item.name}">
+                <h4>${item.name}</h4>
+            </div>
+            <div class="unit-price">
+                <small>$</small>${item.price}
+            </div>
+            <div class="units">
+                <div class="btn minus">-</div>
+                <div class="number">${item.numberOfUnits}</div>
+                <div class="btn plus">+</div>           
+            </div>
+        </div>
+        `
+    })
+}
+
 function addToCart(id){
     if (cart.some((item) => item.id === id)) {
-        const item = cart.find((product) => product.id === id)
-        item["numberOfUnits"] = (item["numberOfUnits"] ?? 0) + 1;
+        const itemU = cart.find((product) => product.id === id)
+        itemU["numberOfUnits"] = (itemU["numberOfUnits"] ?? 0) + 1;
     }else {
         const item = products.find((product) => product.id === id)
         cart.push({
@@ -44,8 +66,9 @@ function addToCart(id){
     }
     updateCart();
 }
+
 function updateCart(){
-    console.log(cart);
+    renderCart();
 }
 
 renderProducts()
