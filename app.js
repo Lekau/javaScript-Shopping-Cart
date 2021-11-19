@@ -1,8 +1,10 @@
 /* app.js */
 const productsEl = document.querySelector(".products");
 const cartItemsEl = document.querySelector(".cart-items");
+const subtotalEl = document.querySelector(".subtotal");
 
-let cart = [];
+let cart = JSON.parse(localStorage.getItem("CART")) || [];
+updateCart();
 
 function renderProducts(){
     products.forEach((product) => {
@@ -14,7 +16,7 @@ function renderProducts(){
                     </div>
                     <div class="desc">
                         <h2>${product.name}</h2>
-                        <h2><small>$</small>${product.price}</h2>
+                        <h2><small>R</small>${product.price}</h2>
                         <p>
                             ${product.description}
                         </p>
@@ -36,7 +38,7 @@ function renderCart(){
     cart.forEach((item) => {
         cartItemsEl.innerHTML += `
         <div class="cart-item">
-            <div class="item-info">
+            <div class="item-info" onclick="removeItemFromCart(${item.id})">
                 <img src="${item.imgSrc}" alt="${item.name}">
                 <h4>${item.name}</h4>
             </div>
@@ -51,6 +53,17 @@ function renderCart(){
         </div>
         `
     })
+}
+
+function renderSubtotal(){
+    let totalItems = 0, totalPrice = 0;
+
+    cart.forEach((item) => {
+        totalItems += item.numberOfUnits;
+        totalPrice += item.price * item.numberOfUnits;
+    })
+
+    subtotalEl.innerHTML = `Subtotal (${totalItems} items): R ${totalPrice.toFixed(2)}`;
 }
 
 function addToCart(id){
@@ -68,6 +81,8 @@ function addToCart(id){
 
 function updateCart(){
     renderCart();
+    renderSubtotal();
+    localStorage.setItem("CART", JSON.stringify(cart))
 }
 
 function updateNumberOfUnits(id, action){
@@ -76,11 +91,13 @@ function updateNumberOfUnits(id, action){
         item.numberOfUnits = (item.numberOfUnits ?? 0) + 1;
     } else if (action === 'minus' && item.numberOfUnits > 1){
         item.numberOfUnits = (item.numberOfUnits ?? 0) - 1;
-        if (item.numberOfUnits === 1){
-            cart = cart.filter()
-        }
     }
     updateCart();
+}
+
+function removeItemFromCart(id){
+   cart = cart.filter((item) => item.id !== id);
+   updateCart();
 }
 
 renderProducts()
